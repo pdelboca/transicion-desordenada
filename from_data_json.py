@@ -3,14 +3,30 @@ import multiprocessing
 import os
 import sys
 
-def download_dataset(dataset):
-    folder_name = sys.argv[1].split('.')[0]
+
+def _get_folder_name():
+    """Get the name of the folder where the data will be stored.
+
+    It will be the name of the file without the `data.json`. For example,
+    if the file is `energia.data.json`, the folder will be `energia`.
+    """
+    return sys.argv[1].split('.')[0]
+
+
+def download_resources_from_dataset(dataset):
+    """Download the resources of a dataset.
+
+    The resources will be downloaded in a folder named with the ids: <dataset_id>/<resource_id>.
+    """
+    folder_name = _get_folder_name()
     try:
         os.mkdir(f"{folder_name}/{dataset['identifier']}")
     except FileExistsError:
         pass
 
     resources = dataset['distribution']
+
+    print(f"Downloading {len(resources)} resources from dataset {dataset['title']}")
 
     for resource in resources:
         dir_name = f"{folder_name}/{dataset['identifier']}/{resource['identifier']}"
@@ -21,7 +37,6 @@ def download_dataset(dataset):
             # and continue with the next resource
             continue
         url = resource['downloadURL']
-        print(f"Downloading {resource['title']}")
         os.system(f"wget --no-check-certificate --directory-prefix '{dir_name}' -q {url}")
 
 
@@ -35,9 +50,9 @@ if __name__ == '__main__':
 
     # Create a folder with the name of the file to store the data
     try:
-        os.mkdir(file_path.split('.')[0])
+        os.mkdir(_get_folder_name())
     except FileExistsError:
         pass
 
-    with multiprocessing.Pool(processes=4) as pool:
-        pool.map(download_dataset, datasets)
+    with multiprocessing.Pool(processes=8) as pool:
+        pool.map(download_resources_from_dataset, datasets)
