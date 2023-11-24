@@ -36,7 +36,12 @@ def download_resources_from_dataset(dataset):
             # If the resource directory already exists, asume it has been downloaded
             # and continue with the next resource
             continue
-        url = resource['downloadURL']
+        url = resource.get('downloadURL')
+
+        if url is None:
+            print(f"Resource {resource['title']} does not have a download URL")
+            continue
+
         os.system(f"wget --no-check-certificate --directory-prefix '{dir_name}' -q {url}")
 
 
@@ -54,5 +59,5 @@ if __name__ == '__main__':
     except FileExistsError:
         pass
 
-    with multiprocessing.Pool(processes=8) as pool:
+    with multiprocessing.Pool(processes=16) as pool:
         pool.map(download_resources_from_dataset, datasets)
