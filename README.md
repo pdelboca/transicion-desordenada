@@ -4,7 +4,7 @@ Backup ciudadano de datos públicos.
 
 Este repositorio contiene código que permite descargar todos los archivos de diversos portales de datos de la República Argentina.
 
-## Uso
+## Descargar usando el data.json del portal (DCAT)
 
 `from_data_json.py` descarga en una carpeta los archivos de un portal cuyo `data.json` haya sido pasado por parametro. La carpeta tiene el nombre del identificador del portal (`acumar`, `Agro`, `energia`, etc)
 
@@ -16,13 +16,19 @@ python from_data_json.py energia.data.json
 
 # descarga en acumar/
 python from_data_json.py acumar.data.json
-
-# descarga en yvera/
-python from_data_json.py yvera.data.json
-
 ```
 
-## Descargas
+#### Listado de portales con data.json
+
+ - https://datos.gob.ar/data.json
+ - https://datos.acumar.gov.ar/data.json
+ - https://datos.yvera.gob.ar/data.json
+ - https://datos.mindef.gov.ar/data.json
+ - https://datos.energia.gob.ar/data.json
+ - https://datosabiertos.chaco.gob.ar/data.json
+ - https://datos.santafe.gob.ar/data.json
+
+## Ejemplo de descargas
 
 Acá hay dos portales que se pueden descargar para mirar el resultado final:
 
