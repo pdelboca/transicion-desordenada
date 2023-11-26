@@ -1,7 +1,10 @@
 import json
+import logging
 import multiprocessing
 import os
 import sys
+
+logging.basicConfig(filename="logs.txt", level=logging.INFO, format="")
 
 
 def _get_folder_name():
@@ -26,7 +29,7 @@ def download_resources_from_dataset(dataset):
 
     resources = dataset['distribution']
 
-    print(f"Downloading {len(resources)} resources from dataset {dataset['title']}")
+    logging.info(f"Downloading {len(resources)} resources from dataset {dataset['title']}")
 
     for resource in resources:
         dir_name = f"{folder_name}/{dataset['identifier']}/{resource['identifier']}"
@@ -39,7 +42,7 @@ def download_resources_from_dataset(dataset):
         url = resource.get('downloadURL')
 
         if url is None:
-            print(f"Resource {resource['title']} does not have a download URL")
+            logging.error(f"Resource {resource['title']} does not have a download URL")
             continue
 
         os.system(f"wget --no-check-certificate --directory-prefix '{dir_name}' -q {url}")
@@ -61,3 +64,5 @@ if __name__ == '__main__':
 
     with multiprocessing.Pool(processes=16) as pool:
         pool.map(download_resources_from_dataset, datasets)
+
+    logging.info("Finished downloading all resources")
