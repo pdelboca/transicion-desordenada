@@ -45,7 +45,10 @@ def download_resources_from_dataset(dataset):
             logging.error(f"Resource {resource['title']} does not have a download URL")
             continue
 
-        os.system(f"wget --no-check-certificate --directory-prefix '{dir_name}' -q {url}")
+        exit_value = os.system(f"wget --connect-timeout 3 -t 2 --no-check-certificate --directory-prefix '{dir_name}' -q {url}")
+        if exit_value != 0:
+            logging.error(f"Error when downloading: {url}")
+            continue
 
 
 if __name__ == '__main__':
