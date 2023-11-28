@@ -3,8 +3,4 @@
 env/
 
 # Folders created when downloading the data
-yvera/
-acumar/
-Agro/
-datos/
-energia/
+dumps/
