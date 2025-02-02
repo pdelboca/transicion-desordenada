@@ -1,3 +1,13 @@
+"""Backuper of Argentinian data Portals
+
+This Python scrpit will iterate over all the listed _PORTALS variable and backup
+the its metadata and resources.
+
+Specifically, this script will:
+ - Attempt to get a DCAT json file that Argentinian data portals publish using https://github.com/GSA/ckanext-datajson
+ - Iterate through all the datasets and download its resources in a temp folder called 'data'
+ - Create a zip file containing the data and the DCAT file with the metadata.
+"""
 import json
 import logging
 import multiprocessing
@@ -111,7 +121,13 @@ def download_data_portal(dcat_json):
 
 
 def get_dcat_json(url):
-    """Gets the DCAT json."""
+    """Gets the DCAT json.
+
+    The DCAT json contains all the metadata of the Portal following the DCAT Standard.
+    In the case of Argentinian dataportals, they use ckanext-datajson extension to generate it.
+    Example:
+      https://datos.gob.ar/data.json
+    """
     try:
         response = requests.get(url, verify=url.startswith("https://"))
     except Exception as e:
@@ -131,6 +147,7 @@ def get_dcat_json(url):
 
 
 def zip_data_folder_and_dcat_file(dcat_json, portal_name):
+    """Creates a zip file containing all the downloaded files and the DCAT json file."""
     output_zip = f"{portal_name}.zip"
 
     # Dump the dcat_json into a file in data folder
@@ -148,12 +165,6 @@ def zip_data_folder_and_dcat_file(dcat_json, portal_name):
 
 
 if __name__ == '__main__':
-    """
-    Get a local copy of all the DCAT files.
-    If some of them fail, we'll get it manually and store it.
-    Iterate through all of our DCAT files and download all the resources
-    Write a zip file with the dcat file and all the data
-    """
     for url, portal_name in _PORTALS:
         logging.info(f"Processing {url}...")
         try:
