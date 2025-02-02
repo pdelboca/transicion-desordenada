@@ -4,3 +4,6 @@ env/
 
 # Folders created when downloading the data
 dumps/
+data/
+*.zip
+*.txt
