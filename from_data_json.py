@@ -6,7 +6,12 @@ import requests
 import shutil
 import zipfile
 
-logging.basicConfig(filename="logs.txt", level=logging.INFO)
+logging.basicConfig(
+    filename="logs.txt",
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 _PORTALS = [
     ('https://monitoreo.datos.gob.ar/catalog/jgm/data.json', 'jgm'),
@@ -96,13 +101,13 @@ def download_data_portal(dcat_json):
     """Iterates through all the datasets of a DCAT file and download its resources"""
     datasets = dcat_json.get('dataset', None)
     if not datasets:
-        logging.infor("No datasets to download. Skipping.")
+        logging.error("No datasets to download. Skipping.")
         return
 
     with multiprocessing.Pool(processes=16) as pool:
         pool.map(download_resources_from_dataset, datasets)
 
-    logging.info(f"Finished downloading all resources from {dcat_json.get('title', 'Title Not Found')}")
+    logging.info(f"Finished downloading all resources from: {dcat_json.get('title', 'Title Not Found')}")
 
 
 def get_dcat_json(url):
